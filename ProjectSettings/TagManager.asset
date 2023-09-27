@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - SingStation
+  - vagon
+  - train
+  - UpgreadSlot
+  - PanelForMessage
+  - page
   layers:
   - Default
   - TransparentFX
