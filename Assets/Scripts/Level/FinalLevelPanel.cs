@@ -11,7 +11,6 @@ public class FinalLevelPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI penaltyText;
     [SerializeField] private TextMeshProUGUI timeText;
-    //[SerializeField] private TextMeshProUGUI test;
     [SerializeField] private List<string> carriageUsedOnLevel;
     private int _coin;
     public void FillInfo(int star, string scoreInfo, int coin, int score, int penalty, int time, int level, int maxTime)
@@ -29,7 +28,14 @@ public class FinalLevelPanel : MonoBehaviour
         penaltyText.text = penalty.ToString();
         timeText.text = time + "/" + maxTime;
 
-        PlayerPrefs.SetInt("coin", PlayerPrefs.GetInt("coin") + _coin);
+        if (penalty >= _coin)
+        {
+            PlayerPrefs.SetInt("coin", PlayerPrefs.GetInt("coin") + 0);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("coin", PlayerPrefs.GetInt("coin") + _coin);
+        }
         PlayerPrefs.SetInt("score", PlayerPrefs.GetInt("score") + score);
         if(level % 10 == 0 && star > 0)
         {
@@ -57,7 +63,6 @@ public class FinalLevelPanel : MonoBehaviour
             if (GameObject.Find("EndLevelInfo").GetComponent<ShopDictionary>().TrainName(s) == "Ресторан")
             {
                 _coin += Mathf.RoundToInt(_coin * 0.15f);
-                //Debug.Log(Mathf.RoundToInt(coin * 0.15f));
             }
             
         }

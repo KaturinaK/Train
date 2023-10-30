@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class TrainGeneration : MonoBehaviour
 {
     [SerializeField] private GameObject carriagePrefab;
-
     [SerializeField] private List<string> carriageUsedOnLevel;
     [SerializeField] private List<GameObject> _vagon;
     [SerializeField] private float vect = 0;
@@ -41,7 +40,6 @@ public class TrainGeneration : MonoBehaviour
             if (carriageUsedOnLevel[i] != "ghostCarriage")
             {
                 GameObject g = Resources.Load<GameObject>("Train/" + carriageUsedOnLevel[i]);
-                //Debug.Log(g);
                 vect -= g.GetComponent<RectTransform>().rect.width/2  ;
                 GameObject vagon = Instantiate(g, new Vector3(vect, g.transform.position.y, 0), Quaternion.identity);
                 if(i > 0)
@@ -60,7 +58,6 @@ public class TrainGeneration : MonoBehaviour
         }
 
         GameObject.Find("Main Camera").GetComponent<MainCamera>().GetListTrain(_vagon);
-        //TrainController.Instance.sliderSpeed = GameObject.Find("SliderSpeed").GetComponent<Slider>();
         TrainController.Instance.GetTrain(_vagon[0]);
         ParentCarriages.Instance.GetInfoLocomotive(_vagon[0].name);
         ParentCarriages.Instance.GetInfoLocomotiveImprovment(_vagon[0].name);

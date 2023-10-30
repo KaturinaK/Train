@@ -64,7 +64,6 @@ public class Improvements : MonoBehaviour
     }
     private void SaveListImprovments(List<int> list)
     {
-        //Debug.Log("SaveListImprovments nameTrain " + PlayerPrefs.GetString("nameTrain"));
         gameObject.GetComponent<SaveGame>().SaveListImprovements(list, PlayerPrefs.GetString("nameTrain"));
 
     }

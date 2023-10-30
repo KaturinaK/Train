@@ -9,6 +9,12 @@ public class PanelTrainYouHave : MonoBehaviour
     [SerializeField] private List<string> carriageUsedOnLevel;
     [SerializeField] private GameObject Content;
     [SerializeField] private GameObject prefabSlot;
+    [SerializeField] private GameObject panelWarning;
+    [SerializeField] private GameObject panelWarningRemove;
+    private int _indexOfSlot;
+    private int _indexOfChoosenSlot;
+    private string _nameOfChoosenSlot;
+    
     private void Start()
     {
         CreateSlot();
@@ -36,13 +42,24 @@ public class PanelTrainYouHave : MonoBehaviour
     {
         ShopController.Instance.SaveListCarriageUsedOnLevel(carriageUsedOnLevel);
     }
+    public void ShowWarningPanel(int index)
+    {
+        panelWarning.SetActive(true);
+        _indexOfSlot = index;
+    }
+    public void DelVagon()
+    {
+        DelCarriage(_indexOfSlot);
+        panelWarning.SetActive(false);
+    }
+    public void ExitWarningPanel()
+    {
+        panelWarning.SetActive(false);
+    }
     public void DelCarriage(int index)
     {
-        
         TakeListCarriageUsedOnLevel();
 
-        
-       
         carriageUsedOnLevel[index] = "ghostCarriage";
         
         ShopController.Instance.ShowCarriageAmount();
@@ -61,5 +78,21 @@ public class PanelTrainYouHave : MonoBehaviour
         CreateSlot();
 
     }
-    
+    public void ShowPanelWarningRemove(int ind, string nameOld)
+    {
+        panelWarningRemove.SetActive(true);
+        _indexOfChoosenSlot = ind;
+        _nameOfChoosenSlot = nameOld;
+    }
+    public void ExitPanelWarningRemove()
+    {
+        panelWarningRemove.SetActive(false);
+    }
+    public void RemoveVagon()
+    {
+        ShopController.Instance.RemoveVagon(_indexOfChoosenSlot, _nameOfChoosenSlot);
+        ShopController.Instance.ShowCarriageAmount();
+        ShopController.Instance.ReloadPanelTrainYouHave();
+        panelWarningRemove.SetActive(false);
+    }
 }

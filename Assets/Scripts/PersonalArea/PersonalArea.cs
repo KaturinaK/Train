@@ -12,28 +12,20 @@ public class PersonalArea : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textScore;
     [SerializeField] private TextMeshProUGUI textCoin;
+    [SerializeField] private TextMeshProUGUI textTrainLevel;
+    [SerializeField] private TextMeshProUGUI textTrainName;
+    [SerializeField] private GameObject slotUpgreadPrefab;
+    [SerializeField] private Transform content;
     private int score = 0;
     private int coin = 0;
-
-    [SerializeField] private TextMeshProUGUI textTrainName;
+    private int improvmentLevel;
     private string trainUserName;
-
     private string nameTrain;
-    [SerializeField] private TextMeshProUGUI textTrainLevel;
     private ImprovementCharacteristic improvement;
-
     private List<string> improvmentName = new List<string>() { "ѕрестиж (чем выше уровень престижа, тем больше пассажиров сад€тс€ в твой поезд)", "ћаксимальна€ скорость", "”скорение", "“орможение", "ћесто дл€ вагонов" };
-    //private List<string> improvmentName = new List<string>() { "LevelPrestige", "LevelMaxSpeed", "LevelAccelerationSpeed", "LevelBrakingSpeed", "LevelCarriageCount" };
-
     private List<GameObject> improvmentList = new List<GameObject>();
 
-    private int[] costOfLevel = new int[] { 800, 1200, 1600 };
-
-    [SerializeField] private GameObject slotUpgreadPrefab;
-    public Transform content;
-
-    private int improvmentLevel;
-
+   // private int[] costOfLevel = new int[] { 800, 1200, 1600 };
 
     public static PersonalArea Instance
     {
@@ -48,24 +40,7 @@ public class PersonalArea : MonoBehaviour
         _instance = this;
         nameTrain = PlayerPrefs.GetString("nameTrain");
 
-        
-        trainUserName = gameObject.GetComponent<ShopDictionary>().TrainName(nameTrain);
-        
-        //PlayerPrefs.SetInt("score", 100);
-        score = PlayerPrefs.GetInt("score");
-        textScore.text = score.ToString();
-
-        //PlayerPrefs.SetInt("coin", 10000); 
-        coin = PlayerPrefs.GetInt("coin");
-        textCoin.text = coin.ToString();
-
-        textTrainName.text = trainUserName; 
-
-        improvement = GetComponent<Improvements>().TakeLevel(nameTrain);
-
-        
-
-        textTrainLevel.text = PlayerPrefs.GetInt(PlayerPrefs.GetString("nameTrain")).ToString();
+        ShowParam();
     }
 
     static private PersonalArea _instance;
@@ -76,19 +51,33 @@ public class PersonalArea : MonoBehaviour
         {
             improvmentLevel = improvement.improvmentLevels[i];
 
-
             GameObject slot = Instantiate(slotUpgreadPrefab, content, false);
             slot.name = i.ToString();
-            slot.GetComponent<UpgradeImprovment>().FillInfo(improvmentName[i], improvmentLevel, coin, score);///!!!!!!!!!!
+            slot.GetComponent<UpgradeImprovment>().FillInfo(improvmentName[i], improvmentLevel, coin, score);
 
             improvmentList.Add(slot);
         }
 
-        Debug.Log(PlayerPrefs.GetInt("NewGameInfo") + "NewGameInfo");
         if (PlayerPrefs.GetInt("NewGameInfo") == 4)
             NewGameInfo.Instance.ShowPanelEducationPersonalArea();
     }
-    public void BuySlotOfUpgrade(int costCoin, string nameUpgread, int costScore)//если nameUpgread == LevelCarriageCount, добавл€ть в список вагонов приизрак
+    private void ShowParam()
+    {
+        trainUserName = gameObject.GetComponent<ShopDictionary>().TrainName(nameTrain);
+
+        score = PlayerPrefs.GetInt("score");
+        textScore.text = score.ToString();
+
+        coin = PlayerPrefs.GetInt("coin");
+        textCoin.text = coin.ToString();
+
+        textTrainName.text = trainUserName;
+
+        improvement = GetComponent<Improvements>().TakeLevel(nameTrain);
+
+        textTrainLevel.text = PlayerPrefs.GetInt(PlayerPrefs.GetString("nameTrain")).ToString();
+    }
+    public void BuySlotOfUpgrade(int costCoin, string nameUpgread, int costScore)//если nameUpgread == LevelCarriageCount, добавл€ть в список вагонов призрак
     {
         coin -= costCoin;
         textCoin.text = coin.ToString();
@@ -102,8 +91,6 @@ public class PersonalArea : MonoBehaviour
         Improvements.Instance.GetUpgrade(nameTrain, index);
         improvement = GetComponent<Improvements>().improvementsInfo[nameTrain];
 
-        
-        //textTrainLevel.text = improvement.Level.ToString();
         textTrainLevel.text = PlayerPrefs.GetInt(PlayerPrefs.GetString("nameTrain")).ToString();
 
         for (int i =0; i< improvmentList.Count; i++)
@@ -112,10 +99,9 @@ public class PersonalArea : MonoBehaviour
             improvmentList[i].GetComponent<UpgradeImprovment>().FillInfo(improvmentName[i], improvmentLevel, coin, score);
         }
 
-        if(nameUpgread == "ћесто дл€ вагонов")// было LevelCarriageCount
+        if(nameUpgread == "ћесто дл€ вагонов")
         {
             GetComponent<SaveGame>().AddGhostToListCarriagesUsedOnLevel(PlayerPrefs.GetString("nameTrain"));
-            Debug.Log("addGhost");
         }
     }
 

@@ -9,8 +9,6 @@ public class HUD : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI scoreText;
-    //[SerializeField] private TextMeshProUGUI passengerInTrainText;
-    //[SerializeField] private TextMeshProUGUI passengerOnStationText;
 
     public static HUD Instance
     {

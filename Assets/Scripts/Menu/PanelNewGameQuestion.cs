@@ -6,7 +6,6 @@ public class PanelNewGameQuestion : MonoBehaviour
 {
     public void Yes()
     {
-        //GetComponent<SaveGame>().NewGame();
         GameObject.Find("Save").GetComponent<SaveGame>().NewGame();
     }
     public void No()

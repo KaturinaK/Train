@@ -16,7 +16,7 @@ public class ShopSlot : MonoBehaviour
     [SerializeField] private Image _coinImage;
     [SerializeField] private GameObject buyButton;
     [SerializeField] private GameObject useButton;
-    [SerializeField] private List<string> locomotivesNameList;///!!!!!
+    [SerializeField] private List<string> locomotivesNameList;
     private int index;
     private int _count;
     private int _carriageCost;
@@ -35,7 +35,7 @@ public class ShopSlot : MonoBehaviour
         if(useButton != null)
             CheckCanUse();
 
-        locomotivesNameList = ShopController.Instance.LocomotivesNameList();///!!!!!!!
+        locomotivesNameList = ShopController.Instance.LocomotivesNameList();
         
         ShowInfo();
     }
@@ -56,7 +56,7 @@ public class ShopSlot : MonoBehaviour
     
     private void ShowCarriageCount(int count)
     {
-        _carriageCount.text = count.ToString(); 
+        _carriageCount.text = count.ToString();
     }
     
     private void CheckCanBuy()
@@ -65,14 +65,14 @@ public class ShopSlot : MonoBehaviour
         {
             buyButton.GetComponent<Button>().interactable = false;
         }
-        if(vagon.Type == "train" && ShopController.Instance.CheckMoney(CarriageCost(gameObject.name)))///!!!!
+        if(vagon.Type == "train" && ShopController.Instance.CheckMoney(CarriageCost(gameObject.name)))
         {
             buyButton.GetComponent<Button>().interactable = CheckCanBuyLocomotive();
         }
     }
     private bool CheckCanBuyLocomotive()
     {
-        //locomotivesNameList.Contains(vagon.Name);// эта проверка должна быть  только для локомотивов
+        // эта проверка должна быть  только для локомотивов
         if (locomotivesNameList.IndexOf(vagon.Name) + 1 <= PlayerPrefs.GetInt("PageAccess"))
             return true;
         else return false;
@@ -87,15 +87,6 @@ public class ShopSlot : MonoBehaviour
     }
     private void CheckCanUse()
     {
-        /*if (_count > 0)
-        {
-            useButton.interactable = true;
-        }
-        else
-        {
-            useButton.interactable = false;
-        }*/
-
         useButton.GetComponent<Button>().interactable = _count > 0;
     }
     private void BuySlot()
@@ -121,7 +112,6 @@ public class ShopSlot : MonoBehaviour
         string s = ShopController.Instance.carriageDic[gameObject.name].Type;
         ShopController.Instance.TakeSlotForUse(gameObject.name, s, gameObject);
 
-        //ShowInfo();//!!!!!!!!!!
     }
 
     public void ChangeUseCarriageCount(int p)

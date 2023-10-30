@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class MoveController : MonoBehaviour
 {
-   // private GameObject train;
    private Coroutine Coroutine;
     public static MoveController Instance
     {
@@ -55,7 +54,6 @@ public class MoveController : MonoBehaviour
         for (; ; )
         {
             Handheld.Vibrate();
-            //Debug.Log("zzz");
             yield return new WaitForSecondsRealtime(1f);
         }
     }

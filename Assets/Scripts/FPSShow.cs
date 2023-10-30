@@ -18,11 +18,5 @@ public class FPSShow : MonoBehaviour
         fps = 1.0f / Time.deltaTime;
         fpsShow.text = "FPS " + (int)fps;
     }
-    /*public static float fps;
-
-    void OnGUI()
-    {
-        fps = 1.0f / Time.deltaTime;
-        GUILayout.Label("FPS: " + (int)fps);
-    }*/
+    
 }

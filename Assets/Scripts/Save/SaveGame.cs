@@ -11,7 +11,6 @@ class SaveNeed
     
     public List<int> StarsOnLevel;
 
-    //public int Coin;
 
 }
 class SaveImprovement
@@ -36,7 +35,7 @@ public class SaveGame : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetInt("coin", 10000);//0
-        PlayerPrefs.SetInt("score", 100);//0
+        PlayerPrefs.SetInt("score", 1000);//0
         PlayerPrefs.SetString("nameTrain", "train1");
         PlayerPrefs.SetInt("PageAccess", 1);///1
         PlayerPrefs.SetInt("10button", 0);
@@ -46,7 +45,7 @@ public class SaveGame : MonoBehaviour
         PlayerPrefs.SetInt("NewGameInfo", 1);
 
         CreateInfoStart();
-        CreateInfoTrainStart();//!!!!!!!!!!!!
+        CreateInfoTrainStart();
         SceneManager.LoadScene("MenuLevel", LoadSceneMode.Single);
         //фуункция создание списка для колва купленных ввагонов
         CreateListCarriagesYouHave(PlayerPrefs.GetString("nameTrain"));
@@ -79,25 +78,21 @@ public class SaveGame : MonoBehaviour
         SaveSystem.Set("SaveGame", saveNeed);
         
     }
-    public void CreateInfoTrainStart()//!!!!!!!!!!!!
+    public void CreateInfoTrainStart()
     {
         for (int i = 1; i <= 3; i++)
         {
 
             SaveNeedTrain saveNewGame = new SaveNeedTrain() { CarriageUsedOnLevel = new List<string>() };
-            string s = "SaveTrain" + "train" + i;//!!!!!!!!!!!!
-                                               //saveNewGame.CarriageUsedOnLevel.Add("train1");
+            string s = "SaveTrain" + "train" + i;
+                                               
             saveNewGame.CarriageUsedOnLevel.Add("train" + i);
 
             saveNewGame.CarriageUsedOnLevel.Add("carriage1");
-            //saveNewGame.CarriageUsedOnLevel.Add("carriage2");
-            //saveNewGame.CarriageUsedOnLevel.Add("carriage3");
-            //saveNewGame.CarriageUsedOnLevel.Add("carriage4");
-            //saveNewGame.CarriageUsedOnLevel.Add("ghostCarriage");
-            SaveSystem.Set(s, saveNewGame);//!!!!!!!!!!!!
+            SaveSystem.Set(s, saveNewGame);
         }
     }
-    public void CreateListCarriagesYouHave(string nameTrain)//!!!!!!!!!!!!
+    public void CreateListCarriagesYouHave(string nameTrain)
     {
         for (int i = 1; i <= 3; i++)
         {
@@ -111,32 +106,6 @@ public class SaveGame : MonoBehaviour
             listIntCarriages.CarriagesYouHave[listIntCarriages.CarriagesYouHave.Count - count] = 1;///даем 1 стартовый локомотив
             SaveSystem.Set(f, listIntCarriages);
         }
-    }
-    public void SaveGameInfo(int score, List<int> stars)
-    {
-        SaveNeed test = new SaveNeed() { Score = score, StarsOnLevel = stars };
-        SaveSystem.Set("SaveGame", test);
-    }
-    public void LoadGameInfo()
-    {
-        var save = SaveSystem.Get<SaveNeed>("SaveGame");
-        LevelController.Instance.LoadSaveInfo(save.Score, save.StarsOnLevel);
-    }
-    
-    
-    public void SaveListImprovements(List<int> list, string nameTrain)
-    {
-        SaveImprovement saveImprovement = new SaveImprovement() { improvementLevel = list };
-        string s = "SaveImprovements" + nameTrain;
-        SaveSystem.Set(s, saveImprovement);
-    }
-    public List<int> LoadListImprovements(string nameTrain)
-    {
-        
-        string s = "SaveImprovements" + nameTrain;
-        var save = SaveSystem.Get<SaveImprovement>(s);
-        return save.improvementLevel;
-        
     }
     private void CreateListImprovements()
     {
@@ -152,6 +121,33 @@ public class SaveGame : MonoBehaviour
         }
 
     }
+    public void SaveGameInfo(int score, List<int> stars)
+    {
+        SaveNeed test = new SaveNeed() { Score = score, StarsOnLevel = stars };
+        SaveSystem.Set("SaveGame", test);
+    }
+    public void SaveListImprovements(List<int> list, string nameTrain)
+    {
+        SaveImprovement saveImprovement = new SaveImprovement() { improvementLevel = list };
+        string s = "SaveImprovements" + nameTrain;
+        SaveSystem.Set(s, saveImprovement);
+    }
+    public void LoadGameInfo()
+    {
+        var save = SaveSystem.Get<SaveNeed>("SaveGame");
+        LevelController.Instance.LoadSaveInfo(save.Score, save.StarsOnLevel);
+    }
+    
+    
+    public List<int> LoadListImprovements(string nameTrain)
+    {
+        
+        string s = "SaveImprovements" + nameTrain;
+        var save = SaveSystem.Get<SaveImprovement>(s);
+        return save.improvementLevel;
+        
+    }
+    
     public void AddGhostToListCarriagesUsedOnLevel(string nameTrain)
     {
         string s = "SaveTrain" + nameTrain;

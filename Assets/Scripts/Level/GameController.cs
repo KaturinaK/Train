@@ -7,46 +7,41 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    private int score = 0;
-    private int coin = 0;
-    public GameObject humanPanel;
-    public GameObject endGamePanel;
-    public GameObject panelForMessage;
-    public Transform canvas;
+    [SerializeField] private GameObject stationPrefab;
+    [SerializeField] private GameObject endSpotsPrefab;
+    [SerializeField] private GameObject endGamePanel;
+    [SerializeField] private GameObject panelForMessage;
+    [SerializeField] private GameObject buttonRight;
+    [SerializeField] private GameObject buttonLeft;
+    [SerializeField] private GameObject panelPause;
+    [SerializeField] private GameObject[] carriageOnLevel;
+    [SerializeField] private Transform canvas;
+    [SerializeField] private Image openDoors;
+    [SerializeField] private Button openDoor;
+    [SerializeField] private TextMeshProUGUI timeText;
     private int station = 0;
     private int maxStation = 0;
     private int time = 0;
-    private bool isGameStart=false;
-
-    
+    private int score = 0;
+    private int coin = 0;
     private int maxScore = 0;
     private int playerScore = 0;
-
+    private int maxScoreReward = 5;
     private int levelDifficult;
+    private int _levelNumber;
+    private int minValue = 0;
+    private int maxValue = 1;
+    private GameObject semaphoreNow;
+    private GameObject st;
+    
+    private bool isGameStart = false;
+    
+    private float lerpSpeed = 0.1f;
+    
     public AudioSource musicLoop;
     public AudioSource musicNotLoop;
     public AudioClip[] clip;
-    private GameObject semaphoreNow;
-    [SerializeField] private GameObject stationPrefab;
-    [SerializeField] private GameObject endSpotsPrefab;
-    private GameObject st;
-    private int _levelNumber;
-
-    [SerializeField] private Image openDoors;
-    [SerializeField] private Button openDoor;
-    private float lerpSpeed = 0.1f;
-    private int minValue = 0;
-    private int maxValue = 1;
-
-    [SerializeField] private GameObject[] carriageOnLevel;
-
-    [SerializeField] private TextMeshProUGUI timeText;
-
-    [SerializeField] private GameObject buttonRight;
-    [SerializeField] private GameObject buttonLeft;
-
-    [SerializeField] private GameObject panelPause;
-
+    
     public int Coin
     {
         get { return coin; }
@@ -132,7 +127,6 @@ public class GameController : MonoBehaviour
    
     public void CreateEndGamePanel()
     {
-       // Debug.Log(maxScore + "CreateEndGamePanel");
         Score = TrainController.Instance.Score;
         GameObject endPanel = Instantiate(endGamePanel, canvas, false);
         endPanel.name = "EndLevelInfo";
@@ -186,16 +180,7 @@ public class GameController : MonoBehaviour
     }
     private int CountTime(int diff)//расчет времени для разного уровня сложности 
     {
-        
-        if(diff == 1 || diff == 5 || diff == 9 || diff == 13)
-            return 150 + (-10 * (PlayerPrefs.GetInt("Page") - 1));
-        if(diff == 2 || diff == 6 || diff == 10 || diff == 14)
-            return 175 + (-10 * (PlayerPrefs.GetInt("Page") - 1));
-        if(diff == 3 || diff == 7 || diff == 11 || diff == 15)
-            return 240 + (-10 * (PlayerPrefs.GetInt("Page") - 1));
-        if(diff == 4 || diff == 8 || diff == 12 || diff == 16)
-            return 270 + (-10 * (PlayerPrefs.GetInt("Page") - 1));
-        else return 0;
+        return (35 - PlayerPrefs.GetInt("Page"))*(diff + 1);
     }
     public void EndStopTrain()
     {
@@ -211,6 +196,7 @@ public class GameController : MonoBehaviour
     {
         semaphoreNow = semaphor;
     }
+    //button pause
     public void PauseOn()
     {
         Time.timeScale = 0f;
@@ -224,12 +210,13 @@ public class GameController : MonoBehaviour
     public void GenerationStations(int diff, int numLev)
     {
         Time.timeScale = 1f;
-
+        
         levelDifficult = diff;
         _levelNumber = numLev;
         maxStation = CountStation(diff);
-        maxScore = maxStation * 5;///*5 потому что максимум за хорошую остановку 5 очков
+        maxScore = maxStation * maxScoreReward;
 
+        //расчет где будут появляться станции
         int distanceBetweenStantions = 100;
         int minDistanceBetweenStantion = 50;
         int pathLength = maxStation * distanceBetweenStantions;
@@ -242,54 +229,31 @@ public class GameController : MonoBehaviour
             int randomXPosition = Mathf.RoundToInt(Random.Range(minDistanceBetweenStantion, (pathLenghtWhithounLastStantion - xPositioon) / (maxStation - (i -1)) ));
             xPositioon += randomXPosition;
             st = Instantiate(stationPrefab, new Vector2(xPositioon, 1), stationPrefab.transform.rotation);
-            st.GetComponent<StationPic>().AddPicStation();
-            st.GetComponent<StationPic>().AddPicStop();
-            st.GetComponent<StationPic>().SnowPicTrainStation();
+            st.GetComponent<StationPic>().StationImageManipulations();
         }
 
         xPositioon = pathLength;
         st = Instantiate(stationPrefab, new Vector2(1 * xPositioon, 1), stationPrefab.transform.rotation);
-        st.GetComponent<StationPic>().AddPicStation();
-        st.GetComponent<StationPic>().AddPicStop();
-        st.GetComponent<StationPic>().SnowPicTrainStation();
-        Instantiate(endSpotsPrefab, new Vector2(xPositioon + 50, 1), endSpotsPrefab.transform.rotation);///вот тут написала для точек
-
-        Debug.Log(PlayerPrefs.GetInt("NewGameInfo") + "NewGameInfo");
+        st.GetComponent<StationPic>().StationImageManipulations();
+        ///вот тут написала для точек в конце уровня
+        Instantiate(endSpotsPrefab, new Vector2(xPositioon + 50, 1), endSpotsPrefab.transform.rotation);
+        //education
         if (PlayerPrefs.GetInt("NewGameInfo") == 2)
             NewGameInfo.Instance.ShowPanelEducationOnLevel1();
     }
     private int CountStation(int diff)
     {
+            
         if (PlayerPrefs.GetInt("NewGameInfo") == 2)
-            return 3;
-        else
-        {
-            int coef = 1;
-            if (diff == coef + 4 * (PlayerPrefs.GetInt("Page") - 1))
-            {
-                return 5;
-            }
-            if (diff == coef + 1 + 4 * (PlayerPrefs.GetInt("Page") - 1))
-            {
-                return 7;
-            }
-            if (diff == coef + 2 + 4 * (PlayerPrefs.GetInt("Page") - 1))
-            {
-                return 10;
-            }
-            if (diff == coef + 3 + 4 * (PlayerPrefs.GetInt("Page") - 1))
-            {
-                return 11;
-            }
-            else return 0;
-        }
+            return 2;
+        else return diff + 1;
     }
     public void LoadMenuLevel()
     {
         SceneManager.LoadScene("MenuLevel", LoadSceneMode.Single);
     }
 
-
+    //button left/right
     public void CheckInteractableButtonLeftRight(bool left, bool right)
     {
         buttonLeft.GetComponent<Button>().interactable = left;
@@ -303,6 +267,8 @@ public class GameController : MonoBehaviour
     {
         GameObject.Find("Main Camera").GetComponent<MainCamera>().TurnCameraToRight();
     }
+
+    //button bording
     public void DoorsInteractableButton(bool isOpen)
     {
         openDoor.interactable = isOpen;
@@ -313,7 +279,7 @@ public class GameController : MonoBehaviour
     }
     IEnumerator FillCircle()
     {
-        Debug.Log("Door!!!!!!!!!!!!!!!!!!");
+        //Debug.Log("Door!!!!!!!!!!!!!!!!!!");
         while (openDoors.fillAmount < 1 && !TrainController.Instance.CheckMoving())
         {
             openDoors.fillAmount += Mathf.Lerp(minValue, maxValue, lerpSpeed);
@@ -344,6 +310,7 @@ public class GameController : MonoBehaviour
                 vagon.GetComponent<CarriagePassengerInfo>().PassengerTraffic();
         }
     }
+    //create message
     public void CreatePanelForMessage(string message)
     {
         GameObject panelForText = Instantiate(panelForMessage, canvas, false);

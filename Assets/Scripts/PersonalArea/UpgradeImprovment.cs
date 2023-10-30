@@ -7,26 +7,19 @@ using UnityEngine.UI;
 public class UpgradeImprovment : MonoBehaviour
 {
     [SerializeField] private Image[] starsImage;
-    private int stars;
-
-    private int cost;
     [SerializeField] private TextMeshProUGUI costCoin;
-
-    private int scoreCost = 5;
     [SerializeField] private TextMeshProUGUI costScore;
-
-    private int maxImprovmentLevel = 3;
-
-    private string nameImprovment;
     [SerializeField] private TextMeshProUGUI nameOfImprovment;
-
-    [SerializeField] private Button plus;
-
     [SerializeField] private TextMeshProUGUI nowParamUpgrade;
-
+    [SerializeField] private Button plus;
+    private int stars;
+    private int cost;
+    private int scoreCost = 5;
+    private int maxImprovmentLevel = 3;
+    private string nameImprovment;
+    
     public void FillInfo(string nameOfUpgread, int levelOfUpgread, int coin, int score  )
     {
-
         nameImprovment = nameOfUpgread;
         nameOfImprovment.text = nameImprovment;
 
@@ -35,8 +28,6 @@ public class UpgradeImprovment : MonoBehaviour
         CheckButtonInterectable(levelOfUpgread, coin, score);
 
         nowParamUpgrade.text = InfoNowTrainParameters.Instance.InfoNowTrainParam(gameObject.name);
-        //InfoNowTrainParameters.Instance.TakeLevelsList();
-       // Debug.Log(gameObject.name + "slot");
     }
 
     private void CountCostOfImprovment(int levelOfUpgread )

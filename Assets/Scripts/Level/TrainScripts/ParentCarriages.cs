@@ -37,7 +37,6 @@ public class ParentCarriages : MonoBehaviour
     public void GetInfoLocomotiveImprovment(string key)
     {
 
-        //_locomotiveIprovment = Improvements.Instance.improvementsInfo[key];//было
         _locomotiveIprovment = Improvements.Instance.TakeLevel(key);
     }
     public ImprovementCharacteristic LocomotiveImprovment()

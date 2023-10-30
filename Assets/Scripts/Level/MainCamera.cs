@@ -6,7 +6,6 @@ public class MainCamera : MonoBehaviour
 {
     private List<GameObject> _vagon;
     private int i = 0;
-
     private bool left;
     private bool right;
     private void Update()
@@ -52,8 +51,3 @@ public class MainCamera : MonoBehaviour
         i--;
     }
 }
-
-/*0 1 2
-    3-1
-1
-2*/

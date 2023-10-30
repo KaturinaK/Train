@@ -12,12 +12,9 @@ public class CarriagePassengerInfo : MonoBehaviour
     private int _passengerExit = 0;
     private int _passengerInCarriage = 0;
     private int coin = 0;
-
-    [SerializeField] Slider passengerInCarriageText;
-
     private int trainPrestigeLevel;
-
     private int stationNumber = 0;
+    [SerializeField] Slider passengerInCarriageText;
 
     private void Start()
     {
@@ -26,7 +23,6 @@ public class CarriagePassengerInfo : MonoBehaviour
             passengerInCarriageText.maxValue = carriage.Capacity;
             passengerInCarriageText.value = _passengerInCarriage;
         }
-        
         
     }
     public void GetInfoTrain(CarriageInfo vagon)
@@ -99,12 +95,7 @@ public class CarriagePassengerInfo : MonoBehaviour
     private void CountCoin()
     {
         coin += _passengerExit * carriage.Fare;
-        ShowCoin();
         GameController.Instance.GetCoin(coin);
     }
-    public void ShowCoin()
-    {
-        //Debug.Log(coin);
-
-    }
+    
 }

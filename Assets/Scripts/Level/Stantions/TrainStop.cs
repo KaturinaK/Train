@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class TrainStop : MonoBehaviour
 {
-    //[SerializeField] private GameObject semaphore;
     public void Destroy()
     {
         
         Destroy(gameObject);
     }
     
-    /*public GameObject ChoiseSemaphore()
-    {
-        return semaphore;
-    }*/
 }

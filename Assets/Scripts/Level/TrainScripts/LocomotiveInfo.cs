@@ -35,9 +35,9 @@ public class LocomotiveInfo : MonoBehaviour
     public static Dictionary<string, LocomotiveCharacteristics> Locomotives()
     {
         Dictionary<string, LocomotiveCharacteristics> locomotiveDic = new Dictionary<string, LocomotiveCharacteristics>();
-        locomotiveDic.Add( "train1", new LocomotiveCharacteristics { MaxSpeed = 150, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 0.5f, AccelerationSpeedImprovmentForOneLevel = 1, BrakingSpeed = 0.5f, BrakingSpeedImprovmentForOneLevel = 1, CarriageCount = 1});
-        locomotiveDic.Add( "train2", new LocomotiveCharacteristics {  MaxSpeed = 250, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 1f, AccelerationSpeedImprovmentForOneLevel = 1f, BrakingSpeed = 1f, BrakingSpeedImprovmentForOneLevel = 1f, CarriageCount= 3});
-        locomotiveDic.Add( "train3", new LocomotiveCharacteristics {  MaxSpeed = 350, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 1.5f, AccelerationSpeedImprovmentForOneLevel = 1, BrakingSpeed = 1.5f, BrakingSpeedImprovmentForOneLevel= 1f, CarriageCount= 6 });
+        locomotiveDic.Add( "train1", new LocomotiveCharacteristics { MaxSpeed = 150, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 0.5f, AccelerationSpeedImprovmentForOneLevel = 1, BrakingSpeed = 0.4f, BrakingSpeedImprovmentForOneLevel = 0.1f, CarriageCount = 1});
+        locomotiveDic.Add( "train2", new LocomotiveCharacteristics {  MaxSpeed = 250, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 1f, AccelerationSpeedImprovmentForOneLevel = 1f, BrakingSpeed = 0.5f, BrakingSpeedImprovmentForOneLevel = 0.1f, CarriageCount= 3});
+        locomotiveDic.Add( "train3", new LocomotiveCharacteristics {  MaxSpeed = 350, MaxSpeedImprovmentForOneLevel = 50, AccelerationSpeed = 1.5f, AccelerationSpeedImprovmentForOneLevel = 1, BrakingSpeed = 1f, BrakingSpeedImprovmentForOneLevel= 0.1f, CarriageCount= 6 });
         return locomotiveDic;
     }
 

@@ -14,14 +14,12 @@ public class LevelController : MonoBehaviour
     private List<int> starInLevels = new List<int>();
     [SerializeField] private GameObject button;
     [SerializeField] private GameObject Content;
-    private int _score;
-    [SerializeField] private TextMeshProUGUI _starsText;
-    private int starsForOpen10Level = 25;/// тут будет не 1 а 25
-
-    [SerializeField] private Image picBackground;
-
     [SerializeField] private GameObject buttonLeft;
     [SerializeField] private GameObject buttonRight;
+    [SerializeField] private TextMeshProUGUI _starsText;
+    [SerializeField] private Image picBackground;
+    private int _score;
+    private int starsForOpen10Level = 5;/// тут будет не 1 а 25
     private int maxPages = 4;
     public static LevelController Instance
     {
@@ -48,7 +46,7 @@ public class LevelController : MonoBehaviour
         ShowStars();
 
         CheckInterectableButtonLeftRight();
-       // Debug.Log(PlayerPrefs.GetInt("NewGameInfo") + "NewGameInfo");
+
         if (PlayerPrefs.GetInt("NewGameInfo") == 1)
             NewGameInfo.Instance.ShowPanelStartEducation();
     }
@@ -80,7 +78,6 @@ public class LevelController : MonoBehaviour
         DelButtonLevel();
 
         ShowStars();
-        //Debug.Log("ClickRightButton");
     }
     public void ClickLeftButton()
     {
@@ -114,24 +111,8 @@ public class LevelController : MonoBehaviour
     
     private int DifficultLevel(int number)
     {
-        int diff = 5 * PlayerPrefs.GetInt("Page")  + (1 - PlayerPrefs.GetInt("Page"));
-        int levelNumberForCompare = 10 * (PlayerPrefs.GetInt("Page") - 1);
-        if (number <= 3 + levelNumberForCompare)
-        {
-            diff--;
-        }
-        if (number <= 6 + levelNumberForCompare)
-        {
-            diff--;
-        }
-        if (number <= 9 + levelNumberForCompare)
-        {
-            diff--;
-        }
-        if (number <= 10 + levelNumberForCompare)
-        { diff--; }
-        //Debug.Log(diff);
-        return diff;
+       return  number - (10 * (PlayerPrefs.GetInt("Page") - 1));
+        
     }
     
     public void TakeInfoLevel(int star, int numberLev)//тут получаю значение звезд, номер уровня//функция вызывается после уровня

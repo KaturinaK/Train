@@ -6,26 +6,21 @@ using UnityEngine;
 public class Carriage : ParentCarriages
 {
     private WheelJoint2D[] wheel;
-    private Rigidbody2D body;
     private JointMotor2D jointMotor;
     private float carSpeed, carSmooth;
-    
-    private bool isPessGas;
-    private bool isPessBreak;
-    private bool isStop;
-
     private float moveSpeed; // макс скорость
     private float smoothAcceleration; // плавное ускорение
     private float smoothBrake; // плавное торможение
     private float stopStep = 1000; // шаг для быстрого торможения
-
+    private bool isPessGas;
+    private bool isPessBreak;
+    private bool isStop;
     private ImprovementCharacteristic locomotiveCharacteristic;
     private void Awake()
     {
         
-        body = GetComponent<Rigidbody2D>();
         wheel = GetComponents<WheelJoint2D>();
-        jointMotor.maxMotorTorque = 10000;///
+        jointMotor.maxMotorTorque = 10000;
         jointMotor.motorSpeed = 0;
         foreach (WheelJoint2D w in wheel)
         {
@@ -39,20 +34,14 @@ public class Carriage : ParentCarriages
         locomotiveCharacteristic = ParentCarriages.Instance.LocomotiveImprovment();
         
         LocomotiveCharacteristics locomotive = ParentCarriages.Instance.LocomotiveInstance();
-       // moveSpeed = locomotive.MaxSpeed + locomotive.MaxSpeedImprovmentForOneLevel * locomotiveCharacteristic.LevelMaxSpeed;
         moveSpeed = locomotive.MaxSpeed + locomotive.MaxSpeedImprovmentForOneLevel * locomotiveCharacteristic.improvmentLevels[1];
         smoothAcceleration = locomotive.AccelerationSpeed + locomotive.AccelerationSpeedImprovmentForOneLevel * locomotiveCharacteristic.improvmentLevels[2];
         smoothBrake = locomotive.BrakingSpeed + locomotive.BrakingSpeedImprovmentForOneLevel * locomotiveCharacteristic.improvmentLevels[3];
 
-        TrainController.Instance.GetTrainSpeedCharacteristic(moveSpeed, smoothAcceleration, locomotiveCharacteristic.improvmentLevels[2], smoothBrake, locomotiveCharacteristic.improvmentLevels[3]);
-        //Debug.Log("moveSpeed " + moveSpeed);
-        //Debug.Log("smoothAcceleration " + smoothAcceleration);
-        //Debug.Log("smoothBrake " + smoothBrake);
     }
    
     public int GetPrestige()
     {
-        //Debug.Log("locomotiveCharacteristic.LevelPrestige " + locomotiveCharacteristic.LevelPrestige);
         return locomotiveCharacteristic.LevelPrestige;
     }
     
@@ -61,7 +50,6 @@ public class Carriage : ParentCarriages
         TakeLocomotiveInfo();
         isPessGas = true;
         isStop = false;
-        //Debug.Log("PressGas");
     }
     public void PressGasUp()
     {
@@ -92,7 +80,6 @@ public class Carriage : ParentCarriages
         {
             carSpeed = -moveSpeed * 6;
             carSmooth = smoothAcceleration;
-            //Debug.Log("движемся + ускоряемся");
         }
         if(isPessBreak) //движемся + постепенно тормозим
         {
@@ -127,10 +114,11 @@ public class Carriage : ParentCarriages
             IsStopTrue();
         }
     }
-    public void IsStopTrue()
+    private void IsStopTrue()
     {
         isStop = true;
-
+        TrainController.Instance.StartCheckPosition();
+  
     }
     
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,11 @@ public class TrainDiagram : MonoBehaviour
     [SerializeField] private GameObject buttonBluePlus;
     [SerializeField] private GameObject buttonDestroy;
     [SerializeField] private GameObject Content;
+    [SerializeField] private GameObject panelWarning;
     [SerializeField] private List<string> carriageUsedOnLevel;
     private string newName;
-
+    private string _nameOfChoosenSlot;
+    private int _indexOfChoosenSlot;
     void Start()
     {
         TakeSaveInfoTrain();
@@ -28,12 +31,10 @@ public class TrainDiagram : MonoBehaviour
                 GameObject buttonCloneBluePlus = Instantiate(buttonBluePlus, Content.transform, false);
                 buttonCloneBluePlus.GetComponent<BluePlus>().Info(i);//!!!!!!!!!!!!!!!
             }
-            
             GameObject buttonClone = Instantiate(button, Content.transform, false);
             string s = ShopController.Instance.carriageDic[carriageUsedOnLevel[i]].Type;
             buttonClone.GetComponent<ButtonTrainDiagram>().LoadImage(carriageUsedOnLevel[i], i, s);
 
-            
         }
     }
     
@@ -45,7 +46,7 @@ public class TrainDiagram : MonoBehaviour
     public void ButtonDestroy()
     {
         ShopController.Instance.DestroyDiagram();
-        buttonBluePlus.GetComponent<Button>().interactable = true;//!!!!!!!!!!!!!!!
+        buttonBluePlus.GetComponent<Button>().interactable = true;
     }
     private bool CheckCreatePlus(int i)
     {
@@ -57,7 +58,7 @@ public class TrainDiagram : MonoBehaviour
         }
         else return false;
     }
-    public void BluePlus(int i)//!!!!!!!!!!!!!!!
+    public void BluePlus(int i)
     {
         
         TakeSaveInfoTrain();
@@ -75,11 +76,23 @@ public class TrainDiagram : MonoBehaviour
             ShopController.Instance.DestroyDiagram();
             ShopController.Instance.CreateTrainDiagram();
 
-
-            
         }
         
-        //Debug.Log(ShopController.Instance.carriageDic[newName].Type);
     }
-    
+    public void ShowPanelWarning(int ind, string nameOld)
+    {
+        panelWarning.SetActive(true);
+        _indexOfChoosenSlot = ind;
+        _nameOfChoosenSlot = nameOld;
+    }
+    public void ExitPanelWarning()
+    {
+        panelWarning.SetActive (false);
+    }
+    public void RemoveVagon()
+    {
+        ShopController.Instance.RemoveVagon(_indexOfChoosenSlot, _nameOfChoosenSlot);
+        ShopController.Instance.ShowCarriageAmount();
+        ShopController.Instance.ReloadTrainDiagram();
+    }
 }

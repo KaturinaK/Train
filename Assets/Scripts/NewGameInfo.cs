@@ -47,7 +47,7 @@ public class NewGameInfo : MonoBehaviour
     public void HidePanelStartEducation()
     {
         PanelStartEducation.SetActive(false);
-        PlayerPrefs.SetInt("NewGameInfo",  6);//проверить цифру
+        PlayerPrefs.SetInt("NewGameInfo",  6);
         Debug.Log(PlayerPrefs.GetInt("NewGameInfo") + "NewGameInfo");
     }
    public void YesPanelStartEducation()

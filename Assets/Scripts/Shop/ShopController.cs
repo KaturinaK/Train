@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,18 +7,19 @@ using UnityEngine.SceneManagement;
 
 public class ShopController : ShopDictionary
 {
-    [SerializeField] private GameObject slotPrefab;
-    public Transform content;
-    public Transform panelForDiagram;
-    public Transform panelBackDiagram;
-    public Transform panelPanelTrainYouHave;
+
+    [SerializeField] private Transform content;
+    [SerializeField] private Transform panelForDiagram;
+    [SerializeField] private Transform panelBackDiagram;
+    [SerializeField] private Transform panelPanelTrainYouHave;
     [SerializeField] private TextMeshProUGUI textCoin;
     [SerializeField] private TextMeshProUGUI textCarriagesAvailable;
-    
+    [SerializeField] private GameObject slotPrefab;
+    [SerializeField] private GameObject trainDiagram;
+    [SerializeField] private GameObject prefabPanelTrainYouHave;
     [SerializeField] private List<string> carriageUsedOnLevel;
     [SerializeField] private List<int> carriagesCountYouHave;
 
-    [SerializeField] private GameObject trainDiagram;
     private string nameSlotForUse;
     private string tagSlotForUse;
     private GameObject diagram;
@@ -25,9 +27,7 @@ public class ShopController : ShopDictionary
     private GameObject _panelTrainYouHave;
     private GameObject slot;
 
-    public GameObject prefabPanelTrainYouHave;
-
-    private string locomotiveName;
+    //private string locomotiveName;
     public static ShopController Instance
     {
         get
@@ -40,27 +40,21 @@ public class ShopController : ShopDictionary
     {
         _instance = this;
 
-        locomotiveName = PlayerPrefs.GetString("nameTrain");
+        //locomotiveName = PlayerPrefs.GetString("nameTrain");
 
-        
-
-        //PlayerPrefs.SetInt("coin", 10000);//!!!!!!!!!!!
         Coin = PlayerPrefs.GetInt("coin");
         textCoin.text = Coin.ToString();
 
         carriageUsedOnLevel = gameObject.GetComponent<SaveTrain>().LoadGameInfo(PlayerPrefs.GetString("nameTrain"));
         carriagesCountYouHave = gameObject.GetComponent<SaveTrain>().LoadCarriagesCountInfo(PlayerPrefs.GetString("nameTrain"));
-        //GetListTrainInformation(PlayerPrefs.GetString("nameTrain"));//!!!!!!!!!!!
 
         ShowCarriageAmount();
     }
     static private ShopController _instance;
     private void Start()
     {
-
         CreateSlot();
 
-        Debug.Log(PlayerPrefs.GetInt("NewGameInfo") + "NewGameInfo");
         if (PlayerPrefs.GetInt("NewGameInfo") == 5)
             NewGameInfo.Instance.ShowPanelEducationShop1();
     }
@@ -70,7 +64,6 @@ public class ShopController : ShopDictionary
         int i = 0;
         foreach (string key in carriageDic.Keys)
         {
-
             slot = Instantiate(slotPrefab, content, false);
 
             slot.name = key;
@@ -80,11 +73,9 @@ public class ShopController : ShopDictionary
     }
     private void ReloadSlots()
     {
-        //Debug.Log("ReloadSlots");
         GameObject contentShop = GameObject.Find("ContentShop");
         foreach(var slot in contentShop.GetComponentsInChildren<Transform>())
         {
-            //Debug.Log(slot.name);
             if(slot.name != "ContentShop")
             {
                 Destroy(slot.gameObject);
@@ -112,7 +103,6 @@ public class ShopController : ShopDictionary
         carriagesCountYouHave[index]+= p;
         gameObject.GetComponent<SaveTrain>().SaveCarriagesCountInfo(carriagesCountYouHave, PlayerPrefs.GetString("nameTrain"));
 
-       
     }
     public bool CheckCountBought(int i)
     {
@@ -124,10 +114,10 @@ public class ShopController : ShopDictionary
     }
     public void AddcarriageUsedOnLevel()
     {
-        carriageUsedOnLevel = gameObject.GetComponent<SaveTrain>().LoadGameInfo(PlayerPrefs.GetString("nameTrain"));///!!!!!!!!!!
+        carriageUsedOnLevel = gameObject.GetComponent<SaveTrain>().LoadGameInfo(PlayerPrefs.GetString("nameTrain"));
         carriageUsedOnLevel.Add("ghostCarriage");
         SaveListCarriageUsedOnLevel(carriageUsedOnLevel);
-        ShowCarriageAmount();//!!!!!
+        ShowCarriageAmount();
     }
     public void SaveListCarriageUsedOnLevel(List<string> _carriageUsedOnLevel)
     {
@@ -136,10 +126,7 @@ public class ShopController : ShopDictionary
         {
             string s = "SaveTrain" + "train" + i;
             List<string> list = GameObject.Find("ShopController").GetComponent<SaveTrain>().LoadGameInfo("train" + i);
-            foreach (string s2 in list)
-            {
-                //Debug.Log(s2);
-            }
+            
         }
     }
     private List<string> SortListCarriage(List<string> _carriageUsedOnLevel)
@@ -202,10 +189,9 @@ public class ShopController : ShopDictionary
         nameSlotForUse = name;
         tagSlotForUse = tag;
         slotNow = slot;
-       // Debug.Log(nameSlotForUse);
     }
    
-    public string NameSlotForUse()//!!!!!!!!!!!!!!!
+    public string NameSlotForUse()
     {
         return nameSlotForUse;
     }
@@ -218,7 +204,6 @@ public class ShopController : ShopDictionary
     {
         if (nameSlotForUse != "" && nowType == tagSlotForUse && slotNow.GetComponent<ShopSlot>().ChangeCount())
         {
-            //Debug.Log("nameSlotForUse "+nameSlotForUse);
             if (nowType == "train")
             {
                 PlayerPrefs.SetString("nameTrain", nameSlotForUse);
@@ -234,15 +219,30 @@ public class ShopController : ShopDictionary
 
             if(!slotNow.GetComponent<ShopSlot>().ChangeCount())
                 nameSlotForUse = "";
-            Debug.Log("nameSlotForUse " + nameSlotForUse);
             if (CheckCanChangeCount(nameOld, nowType))
 
                 GameObject.Find(nameOld).GetComponent<ShopSlot>().ChangeUseCarriageCount(1);
-            DestroyDiagram();
-            CreateTrainDiagram();
+            ReloadTrainDiagram();
         }
-        //nameSlotForUse = "";
-        //Debug.Log("nameSlotForUse " + nameSlotForUse);
+    }
+    public void RemoveVagon(int index, string nameOld)
+    {
+        GameObject.Find(nameOld).GetComponent<ShopSlot>().ChangeUseCarriageCount(1);
+
+        carriageUsedOnLevel = gameObject.GetComponent<SaveTrain>().LoadGameInfo(PlayerPrefs.GetString("nameTrain"));
+        carriageUsedOnLevel[index] = "ghostCarriage";
+        SaveListCarriageUsedOnLevel(carriageUsedOnLevel);
+
+    }
+    public void ReloadTrainDiagram()
+    {
+        DestroyDiagram();
+        CreateTrainDiagram();
+    }
+    public void ReloadPanelTrainYouHave()
+    {
+        DestroyPrefabPanelTrainYouHave();
+        CreatePanelTrainYouHave();
     }
     private bool CheckCanChangeCount(string nameOld, string nowType)
     {
@@ -272,18 +272,15 @@ public class ShopController : ShopDictionary
 
     public void CreatePanelTrainYouHave()
     {
-        //panelPanelTrainYouHave.gameObject.SetActive(true);
         _panelTrainYouHave = Instantiate(prefabPanelTrainYouHave, panelPanelTrainYouHave, false);
         
     }
     public void DestroyPrefabPanelTrainYouHave()
     {
         Destroy(_panelTrainYouHave);
-        //panelPanelTrainYouHave.gameObject.SetActive(false);
     }
     public bool CanBuyCarriage()
     {
-        //int carriageAmount = gameObject.GetComponent<LocomotiveInfo>().SetCarriageCount(locomotiveName);//получила из словаря сколько может быть вагонов
         int carriageAmount = gameObject.GetComponent<LocomotiveInfo>().SetCarriageCount(PlayerPrefs.GetString("nameTrain"));//получила из словаря сколько может быть вагонов
                                                                                                     
         int carriageAmountYouHave = carriagesCountYouHave[0];//ghost
@@ -295,17 +292,4 @@ public class ShopController : ShopDictionary
         }
         else return false;
     }
-   /* public int TakeIndexForChangeCount(string nameCarriage)
-    {
-        int i = 0;
-        foreach(var s in gameObject.GetComponent<ShopDictionary>().carriageDic.Keys)
-        {
-            if(s == nameCarriage)
-            {
-                return i;
-            }
-        }
-
-      
-    }*/
 }

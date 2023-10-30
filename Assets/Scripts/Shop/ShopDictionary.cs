@@ -6,7 +6,6 @@ public class CarriageInfo
 {
     public string Name { get; set; }
     public string Category { get; set; }
-    //public bool IsBuy { get; set; }
     public int Cost { get; set; }
     public string Type { get; set; }
     public string Discription { get; set; }
